@@ -268,10 +268,11 @@
       font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: clamp(1.9rem, 4vw, 3rem);
-      line-height: 1.25;
+      line-height: 1.35;
       letter-spacing: -0.02em;
       margin-bottom: 1.2rem;
-      padding-bottom: 0.1em;
+      padding-bottom: 0.2em;
+      overflow: visible;
     }
 
     /* ─── DIVIDER ─── */
@@ -288,7 +289,7 @@
 
     .services-header {
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 2rem;
       margin-bottom: 4rem;
@@ -721,7 +722,7 @@
           <p>Describe your project or system — we're happy to answer questions, provide scoping estimates, or discuss how we can help your team. No obligation.</p>
           <a id="email-btn" href="#" class="btn-primary">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span id="email-btn-text">Email dustin@clearrouteav.com</span>
+            <span id="email-btn-text">Email <span class="__cf_email__" data-cfemail="8ce8f9fff8e5e2ccefe0e9edfefee3f9f8e9edfaa2efe3e1">[email&#160;protected]</span></span>
           </a>
           <p style="font-size:0.75rem;color:var(--muted);margin-top:1rem;margin-bottom:0;">We aim to respond to all inquiries within one business day.</p>
         </div>
@@ -736,17 +737,10 @@
     <p>© 2025 ClearRoute AV LLC. All rights reserved.</p>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     (function() {
       var u = 'dustin';
       var d = 'clearrouteav.com';
       var e = u + '@' + d;
       var m = 'mailto:' + e + '?subject=AV Project Inquiry — ClearRoute AV';
-      var el = document.getElementById('email-link');
-      if (el) { el.href = m; el.textContent = e; }
-      var btn = document.getElementById('email-btn');
-      if (btn) { btn.href = m; }
-    })();
-  </script>
-</body>
-</html>
+      var el = document.g
