@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClearRoute AV LLC — Professional AV Software Programming & Consultation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0c10;
+      --surface:  #111418;
+      --border:   #1e2530;
+      --accent:   #00c8ff;
+      --accent2:  #0077a8;
+      --text:     #e8edf3;
+      --muted:    #7a8a9a;
+      --grid:     rgba(0,200,255,0.035);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── Grid texture overlay ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem;
+      background: rgba(10,12,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-cta {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent) !important;
+      border: 1px solid var(--accent2);
+      padding: 0.45rem 1rem;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent) !important;
+      color: var(--bg) !important;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10rem 2.5rem 5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1.8rem;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 3rem;
+      line-height: 1.85;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.9rem 2rem;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: #33d6ff; transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.9rem 2rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+
+    /* hero corner accent */
+    .hero-corner {
+      position: absolute;
+      right: 2.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 260px;
+      height: 260px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-corner::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+    }
+
+    .hero-corner::after {
+      content: 'AV';
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 4rem;
+      color: rgba(0,200,255,0.08);
+      letter-spacing: -0.04em;
+    }
+
+    /* ─── SECTION SHARED ─── */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 7rem 2.5rem;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.1em;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ─── SERVICES ─── */
+    #services { background: var(--surface); }
+
+    .services-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .services-header p {
+      max-width: 380px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+    }
+
+    .service-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+    }
+
+    .service-card:hover { background: #13181f; }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-num {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0.7;
+    }
+
+    .service-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    .service-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .service-card p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ─── ABOUT ─── */
+    #about .section-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+      line-height: 1.9;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      align-self: start;
+    }
+
+    .stat-box {
+      background: var(--surface);
+      padding: 2rem 1.8rem;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.5rem;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--surface); }
+
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-left p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.9;
+    }
+
+    .contact-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .contact-item-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(0,200,255,0.08);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .contact-item-icon svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent);
+    }
+
+    .contact-item-text span {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-item-text a,
+    .contact-item-text p {
+      font-size: 0.88rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact-item-text a:hover { color: var(--accent); }
+
+    .contact-right {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .contact-right p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .contact-right .btn-primary { align-self: flex-start; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1100px;
+      margin: 0 auto;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    footer p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #hero .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    #hero h1             { animation: fadeUp 0.6s 0.1s ease both; }
+    #hero .hero-sub      { animation: fadeUp 0.6s 0.2s ease both; }
+    #hero .hero-actions  { animation: fadeUp 0.6s 0.3s ease both; }
+    .hero-corner         { animation: fadeUp 0.8s 0.4s ease both; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 860px) {
+      .hero-corner { display: none; }
+
+      #about .section-inner,
+      .contact-wrap {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.4rem; }
+      .section-inner { padding: 5rem 1.5rem; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links li:not(:last-child) { display: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .contact-right { padding: 2rem 1.5rem; }
+      h1 { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">Clear<span>Route</span> AV</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-eyebrow">ClearRoute AV LLC — Rockford, IL</div>
+    <h1>Precision AV<br/>Software <em>Built</em><br/>for Enterprise.</h1>
+    <p class="hero-sub">
+      Professional audio visual software programming and consultation for commercial and enterprise environments. We design, program, and integrate the systems that power your spaces.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Start a Project
+      </a>
+      <a href="#services" class="btn-secondary">
+        View Services →
+      </a>
+    </div>
+    <div class="hero-corner"></div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-inner">
+      <div class="services-header">
+        <div>
+          <div class="section-label">What We Do</div>
+          <h2>End-to-End AV<br/>Programming Solutions</h2>
+        </div>
+        <p>From initial system design through deployment and ongoing support, ClearRoute AV delivers precise, reliable AV programming tailored to your environment.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <div class="service-card">
+          <div class="service-num">01</div>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+          <h3>Custom AV Software Programming</h3>
+          <p>Tailored control system programming for Crestron, AMX, Extron, QSys, and other leading platforms. Every line of code is written to match your exact operational requirements.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-num">02</div>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+          </svg>
+          <h3>System Consultation</h3>
+          <p>Expert analysis of your AV infrastructure needs. We evaluate existing systems, identify gaps, and deliver clear, actionable recommendations aligned with your budget and goals.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-num">03</div>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <h3>Commercial AV Integration</h3>
+          <p>Full-scope programming services for conference rooms, boardrooms, auditoriums, digital signage, and unified communications systems across commercial facilities.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-num">04</div>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <h3>Enterprise AV Programming</h3>
+          <p>Scalable, standardized programming solutions for multi-site enterprise deployments. Consistent system behavior and centralized management across your entire organization.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-num">05</div>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <h3>Ongoing Support & Modification</h3>
+          <p>Post-deployment programming support, software updates, and system modifications as your facility requirements evolve over time.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="about-text">
+        <div class="section-label">About ClearRoute AV</div>
+        <h2>Built on Deep<br/>Technical Expertise</h2>
+        <p>ClearRoute AV LLC is an independent AV software programming and consultation firm based in the Rockford, Illinois area. We specialize in the programming side of AV — the code, logic, and control systems that make complex environments work seamlessly.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner">
+      <div class="contact-wrap">
+        <div class="contact-left">
+          <div class="section-label">Contact</div>
+          <h2>Let's Talk<br/>About Your Project</h2>
+          <p>Ready to start a project or need a consultation? Reach out directly and we'll respond promptly to discuss your AV programming needs.</p>
+
+          <div class="contact-detail">
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <span>Email</span>
+                <a href="/cdn-cgi/l/email-protection#1e7a6b6d6a77705e7d727b7f6c6c716b6a7b7f68307d7173"><span class="__cf_email__" data-cfemail="d2b6a7a1a6bbbc92b1beb7b3a0a0bda7a6b7b3a4fcb1bdbf">[email&#160;protected]</span></a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <span>Location</span>
+                <p>Rockford, Illinois Area</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <span>Clients</span>
+                <p>Commercial &amp; Enterprise</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-right">
+          <div class="section-label" style="margin-bottom:0.5rem;">Ready to get started?</div>
+          <h2 style="font-size:1.6rem;">Send Us a Message</h2>
+          <p>Describe your project or system — we're happy to answer questions, provide scoping estimates, or discuss how we can help your team. No obligation.</p>
+          <a href="/cdn-cgi/l/email-protection#d3b7a6a0a7babd93b0bfb6b2a1a1bca6a7b6b2a5fdb0bcbeeca0a6b1b9b6b0a7ee9285f383a1bcb9b6b0a7f39abda2a6baa1aaf3315347f390bfb6b2a181bca6a7b6f39285" class="btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email <span class="__cf_email__" data-cfemail="42263731362b2c02212e272330302d37362723346c212d2f">[email&#160;protected]</span>
+          </a>
+          <p style="font-size:0.75rem;color:var(--muted);margin-top:1rem;margin-bottom:0;">We aim to respond to all inquiries within one busines
